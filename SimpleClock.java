@@ -2,6 +2,7 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -19,15 +20,20 @@ public class SimpleClock extends JFrame {
         String time;
         String day;
         String date;
-
+//since simple clock extends Jframe create new instance
         SimpleClock() {
+            //set a layout,dimension and title
+            //ensure Xbutton works
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             this.setTitle("Digital Clock");
             this.setLayout(new FlowLayout());
-            this.setSize(350, 220);
+            this.setSize(1000, 500);
             this.setResizable(false);
+            JPanel panel=new JPanel();
+            JButton button=new JButton("SWITCH");
     
             timeFormat = new SimpleDateFormat("hh:mm:ss a");
+
             dayFormat=new SimpleDateFormat("EEEE");
             dateFormat=new SimpleDateFormat("dd MMMMM, yyyy");
             timeLabel = new JLabel();
@@ -40,21 +46,38 @@ public class SimpleClock extends JFrame {
     
             dateLabel=new JLabel();
             dateLabel.setFont(new Font("Ink Free",Font.BOLD,30));
-    
+
+            button.addActionListener(new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(timeFormat.toPattern().equals("hh:mm:ss a"))
+                    {
+                        timeFormat.applyPattern("HH:mm:ss a");
+                    }else {
+                        timeFormat.applyPattern("hh:mm:ss a");
+                    }
+                }
+
+            });
     
             this.add(timeLabel);
             this.add(dayLabel);
             this.add(dateLabel);
+            panel.add(button);
+            this.add(panel);
             this.setVisible(true);
     
             setTimer();
         }
     
         public void setTimer() {
-            while (true) {
+            while (Thread.currentThread().isAlive()) {
                 time = timeFormat.format(Calendar.getInstance().getTime());
                 timeLabel.setText(time);
-    
+
+                time = timeFormat.format(Calendar.getInstance().getTime());
+                timeLabel.setText(time);
+
                 day = dayFormat.format(Calendar.getInstance().getTime());
                 dayLabel.setText(day);
     
